@@ -2,6 +2,8 @@ defmodule ShortmanAPI.Router do
   use ShortmanAPI, :router
 
   pipeline :api do
+    # Would be nice to move origins to config; however fine for tests
+    plug(CORSPlug, origin: ["*"])
     plug :accepts, ["json"]
   end
 

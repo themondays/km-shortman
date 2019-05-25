@@ -40,5 +40,6 @@ defmodule ShortmanAPI.Endpoint do
     key: "_shortman_api_key",
     signing_salt: "O3MI3QlV"
 
+  plug(CORSPlug)
   plug ShortmanAPI.Router
 end
