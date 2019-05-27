@@ -33,7 +33,7 @@ defmodule ShortmanAPI.LinkController do
   end
 
   def show(conn, %{"id" => id}) do
-    link = Records.get_link!(id)
+    link = Records.get_link_by_hashid!(id)
     render(conn, "show.json", link: link)
   end
 end
