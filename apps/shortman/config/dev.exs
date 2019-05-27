@@ -8,6 +8,6 @@ use Mix.Config
 config :shortman, Shortman.Repo,
   username: "staging",
   password: "staging",
-  database: "shortman_dev",
-  hostname: "localhost",
+  database: "staging",
+  hostname: "postgres",
   pool_size: 100

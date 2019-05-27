@@ -1,0 +1,17 @@
+FROM elixir:alpine
+MAINTAINER Jared Denisov
+ARG app_name=shortman_umbrella
+ARG phoenix_subdir=.
+ENV REPLACE_OS_VARS=true TERM=xterm
+WORKDIR /opt/app
+
+RUN apk update \
+	&& mix local.rebar --force \
+    && mix local.hex --force
+COPY . .
+
+RUN mix do deps.get, deps.compile, compile
+RUN mix phx.digest
+
+EXPOSE 4000 4001
+CMD ["mix", "do", "deps.get", "ecto.create", "ecto.migrate,", "phx.server"]
