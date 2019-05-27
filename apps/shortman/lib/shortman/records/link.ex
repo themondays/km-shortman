@@ -4,17 +4,16 @@ defmodule Shortman.Records.Link do
   alias Shortman.Records.Hashid
 
   schema "links" do
-    field :hits, :integer, default: 0
-    field :url, :string
-    field :hashid, :string, virtual: true, null: true, default: nil
-    timestamps()
+    field(:hits, :integer, default: 0)
+    field(:url, :string)
+    field(:hashid, :string, virtual: true, null: true, default: nil)
   end
 
   @doc false
   def changeset(link, attrs) do
     link
     |> cast(attrs, [:url, :hits])
-    |> validate_required([:url, :hits])
+    |> validate_required([:url])
   end
 
   @doc """

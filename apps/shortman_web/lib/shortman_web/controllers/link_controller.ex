@@ -5,7 +5,7 @@ defmodule ShortmanWeb.LinkController do
   alias Shortman.Records.Link
   alias Shortman.Records.Cache
 
-  action_fallback ShortmanWeb.FallbackController
+  action_fallback(ShortmanWeb.FallbackController)
 
   def create(conn, %{"link" => link_params}) do
     with {:ok, %Link{} = link} <- Records.create_link(link_params) do

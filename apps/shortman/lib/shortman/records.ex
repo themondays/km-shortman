@@ -10,6 +10,8 @@ defmodule Shortman.Records do
 
   alias Shortman.Records.Hashid
 
+  alias Shortman.Records.Cache
+
   alias Shortman.Records.QueryCache
 
   @doc """
@@ -59,13 +61,71 @@ defmodule Shortman.Records do
   def get_link_by_hashid!(hashid) do
     case Hashid.decode(hashid) do
       {:ok, data} ->
-        case get_link(List.first(data)) do
-          link ->
-            link
-        end
+        Cache.fetch(hashid, fn ->
+          case get_link(List.first(data)) do
+            link ->
+              link
+          end
+        end)
 
       _ ->
         nil
+    end
+  end
+
+  @doc """
+  Gets a single link by url.
+
+  Raises `Ecto.NoResultsError` if the Link does not exist.
+
+  ## Examples
+
+      iex> get_link!(123)
+      %Link{}
+
+      iex> get_link!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_link_by_url!(url) do
+    link = Repo.get_by(Link, url: url)
+
+    if link != nil do
+      {:ok,
+       %Link{
+         id: link.id,
+         hashid: link.hashid,
+         url: link.url,
+         hits: link.hits
+       }}
+    end
+
+    # QueryCache.fetch(url, fn ->
+    #   Repo.get_by!(Link, %{url: url})
+    # end)
+  end
+
+  @doc """
+  Find or create a link.
+
+  ## Examples
+
+      iex> create_link(%{field: value})
+      {:ok, %Link{}}
+
+      iex> create_link(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def find_or_create_link(attrs \\ %{}) do
+    case get_link_by_url!(attrs["url"]) do
+      {:ok, link} ->
+        {:ok, link}
+
+      _ ->
+        %Link{}
+        |> Link.changeset(attrs)
+        |> Repo.insert()
     end
   end
 
@@ -81,6 +141,7 @@ defmodule Shortman.Records do
       {:error, %Ecto.Changeset{}}
 
   """
+
   def create_link(attrs \\ %{}) do
     QueryCache.fetch(attrs["url"], fn ->
       %Link{}

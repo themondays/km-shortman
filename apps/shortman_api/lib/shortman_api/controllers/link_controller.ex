@@ -5,7 +5,7 @@ defmodule ShortmanAPI.LinkController do
 
   alias Shortman.Records.Link
 
-  action_fallback ShortmanAPI.FallbackController
+  action_fallback(ShortmanAPI.FallbackController)
 
   def index(conn, _params) do
     links = Records.list_links()
@@ -22,8 +22,8 @@ defmodule ShortmanAPI.LinkController do
   end
 
   def create(conn, %{"link" => link_params}) do
-    result = Records.create_link(link_params)
-
+    result = Records.find_or_create_link(link_params)
+    # Records.create_link(link_params)
     {:ok, %Link{} = link} = result
 
     conn
