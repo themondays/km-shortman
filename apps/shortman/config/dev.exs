@@ -7,7 +7,7 @@ use Mix.Config
 # Configure your database
 config :shortman, Shortman.Repo,
   username: "staging",
-  password: "option123",
+  password: "staging",
   database: "shortman_dev",
   hostname: "localhost",
   pool_size: 100
